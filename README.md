@@ -37,7 +37,7 @@ graph.render({
 
 will render:
 
-![multi-series](multi-series.png)
+![multi-series](https://github.com/khrome/ascii-art-graph/raw/master/multi-series.png)
 
 and you can get finer detail by using the `.braille()` method to use the braille charset to subgrid the individual characters.
 
@@ -59,7 +59,7 @@ graph.braille({
 ```
 will render:
 
-![simple-braille](simple-braille.png)
+![simple-braille](https://github.com/khrome/ascii-art-graph/raw/master/simple-braille.png)
 
 Roadmap
 -------
