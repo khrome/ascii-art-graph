@@ -2,7 +2,7 @@ Ascii Art Graph
 ===============
 
 
-Currently uses d3 internally for range generation, but the eventual goal is a "drop in" d3 compatible interface
+Currently uses d3 internally for domain/range generation, but the eventual goal is a "drop in" d3 compatible interface
 
 Usage
 -----
@@ -55,10 +55,7 @@ graph.render({
     }
   ]
 }, function(err, result){
-    should.not.exist(err);
-    should.exist(result);
-    result.should.equal(multi.toString());
-    done();
+    //do something with the results
 });
 ```
 

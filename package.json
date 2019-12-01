@@ -1,6 +1,6 @@
 {
   "name": "ascii-art-graph",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "graph.js",
   "description" : "draw graphs in the terminal",
   "dependencies": {
