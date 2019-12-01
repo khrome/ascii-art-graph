@@ -1,10 +1,11 @@
 {
   "name": "ascii-art-graph",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "graph.js",
-  "description" : "draw graphs in the terminal",
+  "description": "draw graphs in the terminal",
   "dependencies": {
     "ascii-art-ansi": "^1.1.0",
+    "ascii-art-braille": "0.0.2",
     "d3": "^5.14.2"
   },
   "devDependencies": {

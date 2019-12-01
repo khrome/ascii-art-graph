@@ -1,18 +1,19 @@
 (function (root, factory){
     if(typeof define === 'function' && define.amd){
         // AMD. Register as an anonymous module.
-        define(['ascii-art-ansi', 'd3', 'json2csv'], factory);
+        define(['ascii-art-ansi', 'ascii-art-braille', 'd3', 'json2csv'], factory);
     }else if (typeof module === 'object' && module.exports){
         module.exports = factory(
             require('ascii-art-ansi'),
+            require('ascii-art-braille'),
             require('d3'),
             require('json2csv')
         );
     }else{
         // Browser globals (root is window)
-        root.AsciiArtGraph = factory(root.AsciiArtAnsi, root.d3);
+        root.AsciiArtGraph = factory(root.AsciiArtAnsi, root.AsciiArtBraille, root.d3);
     }
-}(this, function(ansi, d3, j2c){
+}(this, function(ansi, braille, d3, j2c){
     var toCSV = j2c.parse;
 
     var ObjectMap = function(obj, mapFn){
@@ -36,6 +37,33 @@
             return flatData;
         }
         this.options = options || {};
+    }
+
+    Timeseries.prototype.mask = function(series, cb){
+        this.render(series, function(err, results, grid){
+            cb(undefined, grid.map(function(row){
+                return row.map(function(chr){
+                    return (chr === ' ')?false:true;
+                });
+            }));
+        })
+    }
+
+    Timeseries.prototype.braille = function(series, cb){
+        var ob = this;
+        var originalHeight = this.options.height;
+        this.options.height = this.options.height * 4
+        var originalWidth = this.options.width;
+        this.options.width = this.options.width * 2;
+        this.mask(series, function(err, mask){
+            ob.options.height = originalHeight;
+            ob.options.width = originalWidth;
+            if(err) return cb(err);
+            var result = braille.binary2DMapToBraille(mask);
+            cb(undefined, result.map(function(line){
+                return line.join('')
+            }).join("\n"), result);
+        })
     }
 
     Timeseries.prototype.render = function(series, cb){
@@ -114,7 +142,7 @@
         });
         if(cb) cb(undefined, grid.reverse().map(function(chars){
             return ' '+chars.join("")
-        }).join("\n "));
+        }).join("\n "), grid);
     }
 
     var Graph = {};

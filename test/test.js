@@ -1,9 +1,26 @@
 var should = require('chai').should();
 var Graph = require('../graph');
 var fs = require('fs');
+var braille = require('ascii-art-braille');
 
 var simple = fs.readFileSync(__dirname+'/data/simpleLineGraph.json');
 var multi = fs.readFileSync(__dirname+'/data/multiLineGraph.json');
+var binaryGrid = JSON.parse(fs.readFileSync(__dirname+'/data/binaryGrid.json'));
+var simpleBraille = fs.readFileSync(__dirname+'/data/simple-braille.ansi').toString();
+
+var seriesA = [
+  { value: 2, date: '2019-11-25T01:55:45.000Z' },
+  { value: 5, date: '2019-11-25T01:56:45.000Z' },
+  { value: 3, date: '2019-11-25T01:58:45.000Z' },
+  { value: 11, date: '2019-11-25T01:59:45.000Z' }
+];
+
+var seriesB = [
+  { value: 10, date: '2019-11-25T01:55:45.000Z' },
+  { value: 8, date: '2019-11-25T01:56:45.000Z' },
+  { value: 4, date: '2019-11-25T01:58:45.000Z' },
+  { value: 6, date: '2019-11-25T01:59:45.000Z' }
+];
 
 
 describe('ascii-art-graph', function(){
@@ -17,24 +34,7 @@ describe('ascii-art-graph', function(){
             valueField : 'value'
         });
         graph.render({
-            'timeseries' : [
-              {
-                value: 2,
-                date: '2019-11-25T01:55:45.000Z',
-              },
-              {
-                value: 5,
-                date: '2019-11-25T01:56:45.000Z',
-              },
-              {
-                value: 3,
-                date: '2019-11-25T01:58:45.000Z',
-              },
-              {
-                value: 11,
-                date: '2019-11-25T01:59:45.000Z',
-              }
-            ]
+            'timeseries' : seriesA
         }, function(err, result){
             should.not.exist(err);
             should.exist(result);
@@ -54,42 +54,8 @@ describe('ascii-art-graph', function(){
             colors : ['red', 'blue']
         });
         graph.render({
-            'timeseries-a' : [
-              {
-                value: 2,
-                date: '2019-11-25T01:55:45.000Z',
-              },
-              {
-                value: 5,
-                date: '2019-11-25T01:56:45.000Z',
-              },
-              {
-                value: 3,
-                date: '2019-11-25T01:58:45.000Z',
-              },
-              {
-                value: 11,
-                date: '2019-11-25T01:59:45.000Z',
-              }
-          ],
-          'timeseries-b' : [
-            {
-              value: 10,
-              date: '2019-11-25T01:55:45.000Z',
-            },
-            {
-              value: 8,
-              date: '2019-11-25T01:56:45.000Z',
-            },
-            {
-              value: 4,
-              date: '2019-11-25T01:58:45.000Z',
-            },
-            {
-              value: 6,
-              date: '2019-11-25T01:59:45.000Z',
-            }
-          ]
+            'timeseries-a' : seriesA,
+            'timeseries-b' : seriesB
         }, function(err, result){
             should.not.exist(err);
             should.exist(result);
@@ -97,78 +63,57 @@ describe('ascii-art-graph', function(){
             done();
         });
     });
+
+    it('renders a small single mask', function(done){
+        var graph = new Graph.Timeseries({
+            height : 20,
+            width : 80,
+            node : '@',
+            line : '`',
+            timeField : 'date',
+            valueField : 'value'
+        });
+        graph.mask({
+            'timeseries' : seriesA
+        }, function(err, result){
+            should.not.exist(err);
+            should.exist(result);
+            result.should.deep.equal(binaryGrid);
+            done();
+        });
+    });
+
+    describe('renders in braille', function(){
+
+        it('characters', function(done){
+            // | 1 4 |
+            // | 2 5 |
+            // | 3 6 |
+            // | 7 8 |
+            braille.from('1234').should.equal('⡇');
+            braille.from('12345678').should.equal('⣿');
+            braille.from('').should.equal('⠀');
+            braille.from('5678').should.equal('⢸');
+            done();
+        });
+
+        it('renders a small braille output', function(done){
+            var graph = new Graph.Timeseries({
+                height : 20,
+                width : 80,
+                node : '@',
+                line : '`',
+                timeField : 'date',
+                valueField : 'value'
+            });
+            graph.braille({
+                'timeseries' : seriesA
+            }, function(err, result){
+                should.not.exist(err);
+                should.exist(result);
+                result.should.equal(simpleBraille);
+                done();
+            });
+        });
+    });
 });
-
-/*
-
-{
-  'design:my-project:mvp': [
-    {
-      activity: 'design',
-      complete: 2,
-      'creation-date': '2019-11-25T01:55:45.000Z',
-      'modification-date': '2019-11-25T01:55:45.000Z',
-      date: '2019-11-25T01:55:45.000Z',
-      scope: 'my-project:mvp'
-    },
-    {
-      activity: 'design',
-      complete: 4,
-      'creation-date': '2019-11-25T01:55:45.000Z',
-      'modification-date': '2019-11-25T01:55:46.000Z',
-      date: '2019-11-25T01:55:46.000Z',
-      scope: 'my-project:mvp',
-      total: 10
-    },
-    {
-      activity: 'design',
-      complete: 6,
-      'creation-date': '2019-11-25T01:55:45.000Z',
-      'modification-date': '2019-11-25T01:55:48.000Z',
-      date: '2019-11-25T01:55:48.000Z',
-      scope: 'my-project:mvp',
-      total: 10
-    },
-    {
-      activity: 'design',
-      complete: 10,
-      'creation-date': '2019-11-25T01:55:45.000Z',
-      'modification-date': '2019-11-25T01:55:51.000Z',
-      date: '2019-11-25T01:55:51.000Z',
-      scope: 'my-project:mvp',
-      total: 10
-    }
-  ],
-  'programming:my-project:mvp': [
-    {
-      activity: 'programming',
-      complete: 2,
-      'creation-date': '2019-11-25T01:55:47.000Z',
-      'modification-date': '2019-11-25T01:55:47.000Z',
-      date: '2019-11-25T01:55:47.000Z',
-      scope: 'my-project:mvp'
-    },
-    {
-      activity: 'programming',
-      complete: 5,
-      'creation-date': '2019-11-25T01:55:47.000Z',
-      'modification-date': '2019-11-25T01:55:49.000Z',
-      date: '2019-11-25T01:55:49.000Z',
-      scope: 'my-project:mvp',
-      total: 15
-    }
-  ],
-  'design:my-project:ui-spec': [
-    {
-      activity: 'design',
-      complete: 2,
-      'creation-date': '2019-11-25T01:55:52.000Z',
-      'modification-date': '2019-11-25T01:55:52.000Z',
-      date: '2019-11-25T01:55:52.000Z',
-      scope: 'my-project:ui-spec'
-    }
-  ]
-}
-
-
-*/

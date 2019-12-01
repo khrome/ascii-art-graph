@@ -19,51 +19,49 @@ var graph = new Graph.Timeseries({
 });
 graph.render({
     'timeseries-a' : [
-      {
-        value: 2,
-        date: '2019-11-25T01:55:45.000Z',
-      },
-      {
-        value: 5,
-        date: '2019-11-25T01:56:45.000Z',
-      },
-      {
-        value: 3,
-        date: '2019-11-25T01:58:45.000Z',
-      },
-      {
-        value: 11,
-        date: '2019-11-25T01:59:45.000Z',
-      }
+      { value: 2, date: '2019-11-25T01:55:45.000Z' },
+      { value: 5, date: '2019-11-25T01:56:45.000Z' },
+      { value: 3, date: '2019-11-25T01:58:45.000Z' },
+      { value: 11, date: '2019-11-25T01:59:45.000Z' }
   ],
   'timeseries-b' : [
-    {
-      value: 10,
-      date: '2019-11-25T01:55:45.000Z',
-    },
-    {
-      value: 8,
-      date: '2019-11-25T01:56:45.000Z',
-    },
-    {
-      value: 4,
-      date: '2019-11-25T01:58:45.000Z',
-    },
-    {
-      value: 6,
-      date: '2019-11-25T01:59:45.000Z',
-    }
+    { value: 10, date: '2019-11-25T01:55:45.000Z' },
+    { value: 8, date: '2019-11-25T01:56:45.000Z' },
+    { value: 4, date: '2019-11-25T01:58:45.000Z' },
+    { value: 6, date: '2019-11-25T01:59:45.000Z' }
   ]
 }, function(err, result){
-    //do something with the results
+    //do something with the result
 });
 ```
 
 will render:
+
 ![multi-series](multi-series.png)
+
+and you can get finer detail by using the `.braille()` method to use the braille charset to subgrid the individual characters.
+
+```javascript
+var graph = new Graph.Timeseries({
+    height : 20,
+    width : 80
+});
+graph.braille({
+    'some-random-timeseries' : [
+      { value: 2, date: '2019-11-25T01:55:45.000Z' },
+      { value: 5, date: '2019-11-25T01:56:45.000Z' },
+      { value: 3, date: '2019-11-25T01:58:45.000Z' },
+      { value: 11, date: '2019-11-25T01:59:45.000Z' }
+  ]
+}, function(err, text, grid){
+    //do something with the results
+});
+```
+will render:
+
+![simple-braille](simple-braille.png)
 
 Roadmap
 -------
 - node output
-- braille UTF support
 - axes & labels
