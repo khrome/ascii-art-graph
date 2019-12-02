@@ -147,5 +147,26 @@
 
     var Graph = {};
     Graph.Timeseries = Timeseries;
+    Graph.create = function(options, callback){
+        if(!callback){
+            return Graph.newReturnContext(options);
+        }else{
+            var graph = new Graph[options.graphType || 'Timeseries'](options);
+            graph[options.renderMethod || 'render'](options.data, function(err, text){
+               callback(text);
+            });
+        }
+    }
+    Graph.newReturnContext = function(options){
+        return new Promise(function(resolve, reject){
+            try{
+                Graph.create(options, function(rendered){
+                    resolve(rendered);
+                });
+            }catch(ex){
+                reject(ex);
+            }
+        });
+    }
     return Graph;
 }));
