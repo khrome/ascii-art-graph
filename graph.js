@@ -11,10 +11,10 @@
         );
     }else{
         // Browser globals (root is window)
-        root.AsciiArtGraph = factory(root.AsciiArtAnsi, root.AsciiArtBraille, root.d3);
+        root.AsciiArtGraph = factory(root.AsciiArtAnsi, root.AsciiArtBraille, root.d3, root.json2csv);
     }
 }(this, function(ansi, braille, d3, j2c){
-    var toCSV = j2c.parse;
+    var toCSV = j2c && j2c.parse;
 
     var ObjectMap = function(obj, mapFn){
         var mapped = {};
